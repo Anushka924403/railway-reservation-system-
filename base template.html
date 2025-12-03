@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Railway Reservation</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a> |
+      <a href="/trains">All Trains (API)</a> |
+      {% if current_user.is_authenticated %}
+        Hello {{ current_user.username }} | <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a> | <a href="/register">Register</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
+
+Anushka Tiwari, [02-12-2025 18:30
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome to Railway Reservation</h1>
+<form method="get" action="/search">
+  <input name="source" placeholder="Source">
+  <input name="dest" placeholder="Destination">
+  <input name="date" type="date">
+  <button>Search</button>
+</form>
+{% endblock %}
+
+Anushka Tiwari, [02-12-2025 18:30
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">User Login</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form action="/login" method="POST" class="form-box">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+                type="email" 
+                name="email" 
+                id="email" 
+                class="form-control" 
+                placeholder="Enter your email" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                class="form-control" 
+                placeholder="Enter your password" 
+                required>
+        </div>
+
+        <button type="submit" class="btn-submit">Login</button>
+
+        <p class="switch-link">
+            Don't have an account? 
+            <a href="/register">Register here</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+Anushka Tiwari, [02-12-2025 18:30]
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">Create an Account</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form action="/register" method="POST" class="form-box">
+
+        <div class="form-group">
+            <label for="full_name">Full Name</label>
+            <input 
+                type="text" 
+                name="full_name" 
+                id="full_name" 
+                class="form-control" 
+                placeholder="Enter full name" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+                type="email" 
+                name="email" 
+                id="email" 
+                class="form-control" 
+                placeholder="Enter your email" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input 
+                type="text" 
+                name="phone" 
+                id="phone" 
+                class="form-control" 
+                placeholder="Enter phone number" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                class="form-control" 
+                placeholder="Create password" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input 
+                type="password" 
+                name="confirm_password" 
+                id="confirm_password" 
+                class="form-control" 
+                placeholder="Re-enter password" 
+                required>
+        </div>
+
+        <button type="submit" class="btn-submit">Register</button>
+
+        <p class="switch-link">
+            Already have an account? 
+            <a href="/login">Login</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+Anushka Tiwari, [02-12-2025 18:31]
+{% extends "base.html" %}
+{% block content %}
+<h2>Book: {{ train.name }} ({{ train.train_no }})</h2>
+<form method="post">
+  <label>Travel Date: <input type="date" name="travel_date" required></label><br>
+  <label>Class:
+    <select name="class">
+      {% for cls, seats in train.classes_json.items() %}
+        <option value="{{ cls }}">{{ cls }} - Fare: {{ train.fare_json[cls] }}</option>
+      {% endfor %}
+    </select>
+  </label><br>
+  <label>Seats: <input name="seat_count" type="number" value="1" min="1" required></label><br>
+  <button>Book & Pay</button>
+</form>
+{% endblock %}
+
+Anushka Tiwari, [02-12-2025 18:31]
+{% extends "base.html" %}
+{% block content %}
+<h2>Ticket: PNR {{ booking.pnr }}</h2>
+<p>Passenger: {{ current_user.full_name or current_user.username }}</p>
+<p>Train: {{ train.name }} ({{ train.train_no }})</p>
+<p>From: {{ train.source }} -> To: {{ train.destination }}</p>
+<p>Date: {{ booking.travel_date }}</p>
+<p>Class: {{ booking.cls }}, Seats: {{ booking.seat_count }}</p>
+<p>Total Fare: {{ booking.total_fare }}</p>
+<a href="/download_ticket/{{ booking.pnr }}">Download Ticket</a>
+<form action="/cancel/{{ booking.pnr }}" method="post" style="margin-top:10px;">
+  <button type="submit">Cancel Booking</button>
+</form>
+{% endblock %}
