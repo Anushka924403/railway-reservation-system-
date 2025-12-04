@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Ticket - Railway Reservation</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .train-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .detail-value {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .class-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .class-option {
+            position: relative;
+        }
+        
+        .class-option input[type="radio"] {
+            display: none;
+        }
+        
+        .class-label {
+            display: block;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .class-label:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .class-option input[type="radio"]:checked + .class-label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .class-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .class-fare {
+            font-size: 12px;
+            color: #667eea;
+        }
+        
+        .seat-count {
+            max-width: 200px;
+        }
+        
+        .price-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            font-size: 16px;
+        }
+        
+        .summary-row.total {
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-proceed {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .btn-proceed:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .btn-cancel:hover {
+            background: #d0d0d0;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .success {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .class-selector {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn-proceed,
+            .btn-cancel {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Book Your Ticket</h1>
+            <p>Complete your booking in just a few steps</p>
+        </div>
+        
+        <div class="content">
+            <!-- Train Details Section -->
+            <div class="section">
+                <div class="section-title">Train Details</div>
+                <div class="train-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Train Name:</span>
+                        <span class="detail-value">{{ train.name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Train Number:</span>
+                        <span class="detail-value">{{ train.number }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Route:</span>
+                        <span class="detail-value">{{ train.source }} → {{ train.destination }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Departure:</span>
+                        <span class="detail-value">{{ train.departure_time }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">{{ train.duration }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Booking Form -->
+            <form method="POST" id="bookingForm">
+                <!-- Journey Date -->
+                <div class="section">
+                    <div class="form-group">
+                        <label for="journey_date">Journey Date *</label>
+                        <input type="date" id="journey_date" name="journey_date" required>
+                    </div>
+                </div>
+                
+                <!-- Class Selection -->
+                <div class="section">
+                    <div class="section-title">Select Class</div>
+                    <div id="classContainer"></div>
+                </div>
+                
+                <!-- Seat Count -->
+                <div class="section">
+                    <div class="form-group seat-count">
+                        <label for="seats">Number of Seats *</label>
+                        <select id="seats" name="seats" required>
+                            <option value="">Select number of seats</option>
+                            <option value="1">1 Seat</option>
+                            <option value="2">2 Seats</option>
+                            <option value="3">3 Seats</option>
+                            <option value="4">4 Seats</option>
+                            <option value="5">5 Seats</option>
+                            <option value="6">6 Seats</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Price Summary -->
+                <div class="price-summary">
+                    <div class="summary-row">
+                        <span>Base Fare (per seat):</span>
+                        <span id="baseFare">₹0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Number of Seats:</span>
+                        <span id="seatCount">0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Service Charge:</span>
+                        <span id="serviceCharge">₹50</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total Payable:</span>
+                        <span id="totalPrice">₹0</span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="buttons">
+                    <button type="button" class="btn-cancel" onclick="history.back()">Cancel Booking</button>
+                    <button type="submit" class="btn-proceed">Proceed to Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Train data from Flask
+        const trainClasses = {{ train.classes_json | safe }};
+        const trainFares = {{ train.fare_json | safe }};
+        
+        // Initialize class selector
+        function initializeClasses() {
+            const container = document.getElementById('classContainer');
+            container.innerHTML = '';
+            
+            for (const [className, count] of Object.entries(trainClasses)) {
+                const fare = trainFares[className] || 0;
+                const classDiv = document.createElement('div');
+                classDiv.className = 'class-option';
+                classDiv.innerHTML = `
+                    <input type="radio" id="class_${className}" name="class" value="${className}" required>
+                    <label for="class_${className}" class="class-label">
+                        <div class="class-name">${className}</div>
+                        <div class="class-fare">₹${fare}</div>
+                    </label>
+                `;
+                container.appendChild(classDiv);
+                
+                // Update price on class selection
+                document.getElementById(`class_${className}`).addEventListener('change', updatePrice);
+            }
+        }
+        
+        // Update total price
+        function updatePrice() {
+            const selectedClass = document.querySelector('input[name="class"]:checked')?.value;
+            const seatCount = parseInt(document.getElementById('seats').value) || 0;
+            
+            if (!selectedClass || seatCount === 0) {
+                document.getElementById('baseFare').textContent = '₹0';
+                document.getElementById('seatCount').textContent = '0';
+                document.getElementById('totalPrice').textContent = '₹0';
+                return;
+            }
+            
+            const fare = trainFares[selectedClass] || 0;
+            const serviceCharge = 50;
+            const total = (fare * seatCount) + serviceCharge;
+            
+            document.getElementById('baseFare').textContent = `₹${fare}`;
+            document.getElementById('seatCount').textContent = seatCount;
+            document.getElementById('totalPrice').textContent = `₹${total}`;
+        }
+        
+        // Event listeners
+        document.getElementById('seats').addEventListener('change', updatePrice);
+        
+        // Set minimum date to today
+        document.getElementById('journey_date').min = new Date().toISOString().split('T')[0];
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeClasses);
+    </script>
+</body>
+</html>

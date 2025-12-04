@@ -6,7 +6,7 @@ from datetime import datetime
 db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
-    tablename = "users"
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Train(db.Model):
-    tablename = "trains"
+    __tablename__ = "trains"
     id = db.Column(db.Integer, primary_key=True)
     train_no = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(150), nullable=False)
@@ -31,7 +31,7 @@ class Train(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Booking(db.Model):
-    tablename = "bookings"
+    __tablename__ = "bookings"
     id = db.Column(db.Integer, primary_key=True)
     pnr = db.Column(db.String(30), unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -46,17 +46,17 @@ class Booking(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class SeatAvailability(db.Model):
-    tablename = "seat_availability"
+    __tablename__ = "seat_availability"
     id = db.Column(db.Integer, primary_key=True)
     train_id = db.Column(db.Integer, db.ForeignKey("trains.id"), nullable=False)
     travel_date = db.Column(db.Date, nullable=False)
     cls = db.Column("class", db.String(10), nullable=False)
     seats_left = db.Column(db.Integer, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    table_args = (db.UniqueConstraint('train_id','travel_date','class', name='train_date_class'),)
+    __table_args__ = (db.UniqueConstraint('train_id','travel_date','class', name='train_date_class'),)
 
 class Payment(db.Model):
-    tablename = "payments"
+    __tablename__ = "payments"
     id = db.Column(db.Integer, primary_key=True)
     booking_id = db.Column(db.Integer, db.ForeignKey("bookings.id"), nullable=False)
     provider = db.Column(db.String(50))
@@ -64,4 +64,15 @@ class Payment(db.Model):
     amount = db.Column(db.Numeric(10,2), nullable=False)
     currency = db.Column(db.String(10), default='INR')
     status = db.Column(db.Enum('SUCCESS','FAILED','REFUNDED','PENDING'), default='PENDING')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class FoodOrder(db.Model):
+    __tablename__ = "food_orders"
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey("bookings.id"), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    items = db.Column(db.Text, nullable=False)  # JSON string of items
+    amount = db.Column(db.Numeric(10,2), nullable=False)
+    status = db.Column(db.Enum('PLACED','PREPARING','ONBOARD','DELIVERED','CANCELLED'), default='PLACED')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact - Railway Reservation</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body{font-family:'Segoe UI',Tahoma,Arial;background:#f5f7fb;margin:0}
+    .container{max-width:900px;margin:40px auto;padding:20px}
+    .card{background:#fff;padding:24px;border-radius:10px;box-shadow:0 10px 30px rgba(30,40,60,0.06)}
+    h1{font-size:22px;margin-bottom:6px}
+    p.lead{color:#666;margin-bottom:18px}
+    .form-row{display:flex;gap:10px}
+    input,textarea{width:100%;padding:12px;border:1px solid #e6e9ef;border-radius:8px}
+    button{background:#667eea;color:#fff;padding:10px 14px;border:0;border-radius:8px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Contact</h1>
+      <p class="lead">Reach out to our support team — we typically respond within 24 hours.</p>
+      <form method="post" action="/contact">
+        <div class="form-row">
+          <input name="name" placeholder="Your name" required>
+          <input name="mobile" placeholder="Mobile number" required>
+        </div>
+        <div style="height:12px"></div>
+        <textarea name="message" rows="5" placeholder="Your message" required></textarea>
+        <div style="height:12px"></div>
+        <button type="submit">Send Message</button>
+      </form>
+      {% if success %}
+      <div style="margin-top:12px;color:green">Message sent successfully. We'll contact you soon.</div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

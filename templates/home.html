@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Railway Reservation</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .navbar h2 { font-size: 1.5em; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; }
+        .nav-links a:hover { background: #667eea; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .search-section { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .search-section h2 { color: #333; margin-bottom: 20px; }
+        .search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 5px; color: #333; font-weight: bold; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+        .search-btn { background: #667eea; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: all 0.3s; align-self: flex-end; }
+        .search-btn:hover { background: #5568d3; transform: translateY(-2px); }
+        .trains-section { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .trains-section h2 { color: #333; margin-bottom: 20px; }
+        .train-list { display: grid; gap: 15px; }
+        .train-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #fafafa; transition: all 0.3s; }
+        .train-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .train-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .train-name { font-size: 1.3em; font-weight: bold; color: #333; }
+        .train-no { color: #667eea; font-weight: bold; }
+        .train-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 10px 0; color: #666; }
+        .detail-item { display: flex; align-items: center; }
+        .detail-label { font-weight: bold; margin-right: 5px; }
+        .train-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; }
+        .classes { color: #667eea; }
+        .action-btn { display: inline-block; padding: 10px 20px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s; font-weight: bold; }
+        .action-btn:hover { background: #5568d3; transform: translateY(-2px); }
+        .message { padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .sidebar { display: grid; grid-template-columns: 1fr 3fr; gap: 20px; }
+        .user-menu { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: fit-content; }
+        .user-menu h3 { color: #333; margin-bottom: 15px; }
+        .user-menu a { display: block; color: #667eea; text-decoration: none; padding: 10px; border-radius: 5px; margin-bottom: 10px; transition: all 0.3s; }
+        .user-menu a:hover { background: #f0f0f0; }
+        .user-menu .logout { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <button id="menuToggle" class="hamburger" aria-label="Open menu" aria-expanded="false" style="background:transparent;border:none;padding:6px;cursor:pointer">
+                <span class="bar bar1" style="display:block;width:22px;height:2px;background:white;border-radius:2px;transition:transform 220ms ease, opacity 220ms ease;margin:4px 0;display:block"></span>
+                <span class="bar bar2" style="display:block;width:18px;height:2px;background:white;border-radius:2px;transition:transform 220ms ease, opacity 220ms ease;margin:4px 0;display:block"></span>
+                <span class="bar bar3" style="display:block;width:14px;height:2px;background:white;border-radius:2px;transition:transform 220ms ease, opacity 220ms ease;margin:4px 0;display:block"></span>
+            </button>
+            <span style="margin-left:10px;font-weight:700">🚂 Railway Reservation</span>
+        </div>
+        <div class="nav-center">
+            <div class="top-heading">Book Smart — Travel Better</div>
+        </div>
+        <div class="nav-right">
+            <div class="user-area" style="color:white;margin-left:18px">Welcome, {{ current_user.full_name or current_user.username }} &nbsp; <a href="/logout" style="color:#ffd">Logout</a></div>
+        </div>
+    </div>
+
+    <div id="sideMenu" class="side-menu">
+        <a href="/home">Home</a>
+        <a href="/history">History</a>
+        <a href="/contact">Contact</a>
+        <a href="/help">Help</a>
+        <a href="/about">About Us</a>
+        <a href="/meal">Meal Options</a>
+    </div>
+
+    <!-- overlay used to dim the page when side menu opens -->
+    <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+    <div class="container">
+        <div class="grid" style="grid-template-columns: 1fr; gap:20px;">
+            <!-- Top area: search rectangle and AI icon -->
+            <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                    <div style="flex:1;">
+                        <h2 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight:800; letter-spacing:0.6px; color:#333; margin-bottom:8px">Book Smart — Travel Better</h2>
+                        <div style="background:#fff;border-radius:10px;padding:14px;box-shadow:0 8px 30px rgba(0,0,0,0.06);display:flex;flex-direction:column;gap:12px;">
+                            <div style="display:flex;gap:10px;align-items:center">
+                                <input id="main_search" type="text" placeholder="Search by train name, number, origin or destination" style="flex:1;padding:12px;border:1px solid #e6e9ef;border-radius:8px;font-size:15px">
+                                <button id="mainSearchBtn" class="search-btn" style="padding:12px 20px">Find Train</button>
+                            </div>
+                            <div style="display:flex;gap:10px;">
+                                <input id="from_loc" type="text" placeholder="From" style="flex:1;padding:10px;border:1px solid #e6e9ef;border-radius:8px;font-size:14px">
+                                <input id="to_loc" type="text" placeholder="To" style="flex:1;padding:10px;border:1px solid #e6e9ef;border-radius:8px;font-size:14px">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width:260px;">
+                        <!-- top-right: delay estimator and platform predictor compact -->
+                        <div style="background:linear-gradient(135deg,#667eea,#764ba2);padding:12px;border-radius:10px;color:white;">
+                            <div style="font-weight:700;margin-bottom:6px">Delay Estimator</div>
+                            <input id="side_pd_train" placeholder="Train ID" style="width:100%;padding:8px;border-radius:6px;border:none;margin-bottom:6px">
+                            <input id="side_pd_date" type="date" style="width:100%;padding:8px;border-radius:6px;border:none;margin-bottom:8px">
+                            <button id="side_pdBtn" class="search-btn" style="width:100%">Estimate</button>
+                            <div id="side_pdResult" class="helper" style="color:#fff;margin-top:6px"></div>
+                        </div>
+                        <!-- single compact predictor block (delay + platform together) -->
+                        <div style="height:12px"></div>
+                        <div style="background:#fff;padding:10px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">
+                            <div style="font-weight:700;margin-bottom:6px;color:#333">Delay & Platform Predictor</div>
+                            <input id="side_pp_train" placeholder="Train ID" style="width:100%;padding:8px;border-radius:6px;border:1px solid #e6e9ef;margin-bottom:8px">
+                            <div style="display:flex;gap:8px;margin-bottom:8px">
+                                <input id="side_pp_date" type="date" style="flex:1;padding:8px;border-radius:6px;border:1px solid #e6e9ef">
+                                <button id="side_ppBtn" class="search-btn" style="width:140px">Predict</button>
+                            </div>
+                            <div id="side_ppResult" class="helper" style="font-weight:700;color:var(--primary);margin-top:6px"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-size:14px;color:#666">Showing featured trains below</div>
+                    <div style="text-align:center">
+                        <div id="aiAssistIcon" class="ai-icon" title="AI Assistant">🤖</div>
+                        <div style="font-size:12px;color:#666;margin-top:6px">AI Assistant</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right main: search + train list -->
+            <div>
+                <div class="card" style="margin-bottom:18px">
+                    <h2>Find Your Train</h2>
+                    <div class="helper">Search trains by origin, destination and date</div>
+                    <div style="margin-top:14px" class="search-row">
+                        <input type="text" name="source" id="quick_from" placeholder="From (city)">
+                        <input type="text" name="dest" id="quick_to" placeholder="To (city)">
+                        <input type="date" id="quick_date">
+                        <button id="quickSearch" class="btn primary">Search</button>
+                    </div>
+                </div>
+
+                <div class="trains-section card">
+                    <h2>✨ Featured Trains</h2>
+                    {% if trains %}
+                        {% for train in trains %}
+                            <div class="train-card">
+                                <div class="train-header">
+                                    <div>
+                                        <div class="train-name">{{ train.name }}</div>
+                                        <div class="train-no">#{{ train.train_no }}</div>
+                                    </div>
+                                </div>
+                                <div class="train-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Route:</span>
+                                        <span>{{ train.source }} → {{ train.destination }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Total Seats:</span>
+                                        <span>{{ train.total_seats }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Classes:</span>
+                                        <span class="classes">{% for cls in train.classes_json %}{{ cls }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
+                                    </div>
+                                </div>
+                                <div class="train-footer">
+                                    <div>
+                                        <strong>From ₹{{ train.fare_json.values()|list|first }}</strong>
+                                    </div>
+                                    <a href="/book/{{ train.id }}" class="action-btn">Book Now</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No trains available. Use the search above to find trains.</p>
+                    {% endif %}
+                </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+    // Menu toggle for side menu (uses CSS class for smooth animation)
+    const menuToggle = document.getElementById('menuToggle');
+    const sideMenu = document.getElementById('sideMenu');
+
+    function openMenu(){
+        sideMenu.classList.add('open');
+        menuToggle.setAttribute('aria-expanded','true');
+        // focus first link for accessibility
+        const first = sideMenu.querySelector('a'); if(first) first.focus();
+    }
+    function closeMenu(){
+        sideMenu.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded','false');
+    }
+
+    menuToggle.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        sideMenu.classList.toggle('open');
+        const opened = sideMenu.classList.contains('open');
+        menuToggle.classList.toggle('open', opened);
+        overlay.classList.toggle('show', opened);
+        document.body.classList.toggle('no-scroll', opened);
+        menuToggle.setAttribute('aria-expanded', opened ? 'true' : 'false');
+    });
+
+    // close when clicking outside
+    document.addEventListener('click', (ev)=>{
+        if(!sideMenu.contains(ev.target) && ev.target !== menuToggle){
+            closeMenu();
+        }
+    });
+
+    // close on Escape
+    document.addEventListener('keydown', (ev)=>{
+        if(ev.key === 'Escape') closeMenu();
+    });
+
+    // Ensure menu links are stacked vertically and keyboard accessible
+    sideMenu.querySelectorAll('a').forEach(a=>{
+        a.setAttribute('role','menuitem');
+        a.style.display = 'block';
+        a.style.padding = '10px 8px';
+    });
+
+    // overlay click closes menu
+    const overlay = document.getElementById('overlay');
+    if(overlay){
+        overlay.addEventListener('click', ()=>{
+            closeMenu();
+            overlay.classList.remove('show');
+            document.body.classList.remove('no-scroll');
+            menuToggle.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded','false');
+        });
+    }
+
+    // Wire side predictor (delay + platform)
+    const side_ppBtn = document.getElementById('side_ppBtn');
+    if(side_ppBtn){
+        side_ppBtn.addEventListener('click', async ()=>{
+            const train = document.getElementById('side_pp_train').value.trim();
+            const date = document.getElementById('side_pp_date').value;
+            if(!train) return alert('Enter train id');
+            try{
+                const resDelay = await fetch(`/predict_delay?train_id=${encodeURIComponent(train)}&date=${encodeURIComponent(date||'')}`);
+                const jd = await resDelay.json();
+                const resPlat = await fetch(`/predict_platform?train_id=${encodeURIComponent(train)}`);
+                const jp = await resPlat.json();
+                document.getElementById('side_ppResult').textContent = `Delay ~ ${jd.estimated_delay_minutes || '?'} min — Platform ${jp.predicted_platform || '?'}`;
+            }catch(e){ console.error(e); alert('Prediction service unavailable'); }
+        });
+    }
+
+    // Main search using From/To inputs
+    const mainSearchBtn = document.getElementById('mainSearchBtn');
+    if(mainSearchBtn){
+        mainSearchBtn.addEventListener('click', ()=>{
+            const from = document.getElementById('from_loc').value.trim();
+            const to = document.getElementById('to_loc').value.trim();
+            if(!from || !to) return alert('Enter From and To');
+            window.location = `/search?source=${encodeURIComponent(from)}&dest=${encodeURIComponent(to)}&date=`;
+        });
+    }
+
+    // AI assist icon click opens assistant modal (simple prompt)
+    const aiAssistIcon = document.getElementById('aiAssistIcon');
+    if(aiAssistIcon){
+        aiAssistIcon.addEventListener('click', ()=>{
+            const q = prompt('Ask the Assistant (e.g. "delay IR-001 2025-12-10")');
+            if(!q) return;
+            fetch('/assistant', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({query:q})}).then(r=>r.json()).then(j=>alert('Assistant: '+j.reply));
+        });
+    }
+});
+</script>

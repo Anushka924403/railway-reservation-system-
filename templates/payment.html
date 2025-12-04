@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Railway Reservation</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .navbar { background: #333; color: white; padding: 15px 30px; }
+        .navbar h2 { font-size: 1.5em; }
+        .container { max-width: 600px; margin: 40px auto; padding: 20px; }
+        .payment-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { border-bottom: 2px solid #667eea; padding-bottom: 20px; margin-bottom: 20px; }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .booking-summary { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .summary-item:last-child { border-bottom: none; }
+        .summary-label { font-weight: bold; color: #333; }
+        .summary-value { color: #666; }
+        .total-line { display: flex; justify-content: space-between; padding: 12px 0; font-size: 1.2em; font-weight: bold; color: #667eea; }
+        .payment-form { margin-top: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 5px rgba(102, 126, 234, 0.3); }
+        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .payment-method { padding: 15px; border: 2px solid #ddd; border-radius: 5px; cursor: pointer; text-align: center; transition: all 0.3s; }
+        .payment-method:hover { border-color: #667eea; background: #f9f9f9; }
+        .payment-method.active { border-color: #667eea; background: #f0f4ff; }
+        .payment-method input[type="radio"] { display: none; }
+        .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .btn { padding: 12px; border: none; border-radius: 5px; font-weight: bold; font-size: 1em; cursor: pointer; transition: all 0.3s; text-decoration: none; text-align: center; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5568d3; transform: translateY(-2px); }
+        .btn-secondary { background: #ddd; color: #333; }
+        .btn-secondary:hover { background: #ccc; }
+        .security-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; padding: 15px; border-radius: 5px; margin-top: 20px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>🚂 Railway Reservation</h2>
+    </div>
+
+    <div class="container">
+        <div class="payment-card">
+            <div class="header">
+                <h1>💳 Complete Payment</h1>
+                <p style="color: #666;">Booking Reference: <strong>{{ pnr }}</strong></p>
+            </div>
+
+            <div class="booking-summary">
+                <h3 style="margin-bottom: 15px;">Booking Summary</h3>
+                <div class="summary-item">
+                    <span class="summary-label">Train:</span>
+                    <span class="summary-value">{{ train.name }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Route:</span>
+                    <span class="summary-value">{{ train.source }} → {{ train.destination }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Date:</span>
+                    <span class="summary-value">{{ booking.travel_date }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Class:</span>
+                    <span class="summary-value">{{ booking.cls }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Passengers:</span>
+                    <span class="summary-value">{{ booking.seat_count }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Price per seat:</span>
+                    <span class="summary-value">₹{{ "%.2f"|format(booking.fare_per_seat) }}</span>
+                </div>
+                <div class="total-line">
+                    <span>Total Amount:</span>
+                    <span>₹{{ "%.2f"|format(booking.total_fare) }}</span>
+                </div>
+            </div>
+
+            <div class="payment-form">
+                <h3 style="margin-bottom: 15px;">Select Payment Method</h3>
+                <form method="post" action="/complete_payment/{{ pnr }}">
+                    <div class="payment-methods">
+                        <div class="payment-method" onclick="selectMethod(this, 'card')">
+                            <input type="radio" name="payment_method" value="card" checked>
+                            <div style="font-size: 2em; margin-bottom: 5px;">💳</div>
+                            <div><strong>Credit/Debit Card</strong></div>
+                        </div>
+                        <div class="payment-method" onclick="selectMethod(this, 'upi')">
+                            <input type="radio" name="payment_method" value="upi">
+                            <div style="font-size: 2em; margin-bottom: 5px;">📱</div>
+                            <div><strong>UPI</strong></div>
+                        </div>
+                    </div>
+
+                    <div id="card-form">
+                        <div class="form-group">
+                            <label>Cardholder Name</label>
+                            <input type="text" name="cardholder" required placeholder="Full name on card">
+                        </div>
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" name="card_number" required placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Expiry (MM/YY)</label>
+                                <input type="text" name="expiry" required placeholder="12/25" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="text" name="cvv" required placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="upi-form" style="display: none;">
+                        <div class="form-group">
+                            <label>UPI ID</label>
+                            <input type="email" name="upi_id" placeholder="yourname@upi">
+                        </div>
+                    </div>
+
+                    <div class="security-info">
+                        🔒 <strong>Secure Payment:</strong> Your payment information is encrypted and secure. We use industry-standard SSL encryption.
+                    </div>
+
+                    <div class="button-group">
+                        <a href="/home" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Pay ₹{{ "%.2f"|format(booking.total_fare) }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectMethod(element, method) {
+            document.querySelectorAll('.payment-method').forEach(e => e.classList.remove('active'));
+            element.classList.add('active');
+            element.querySelector('input[type="radio"]').checked = true;
+            
+            if (method === 'card') {
+                document.getElementById('card-form').style.display = 'block';
+                document.getElementById('upi-form').style.display = 'none';
+            } else {
+                document.getElementById('card-form').style.display = 'none';
+                document.getElementById('upi-form').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

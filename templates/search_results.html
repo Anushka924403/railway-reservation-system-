@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Search Results</title></head>
+  <body>
+    <h1>Search Results for {{ date }}</h1>
+    <ul>
+    {% for t in results %}
+      <li>{{ t.name }} ({{ t.train_no }}) - {{ t.source }} → {{ t.destination }} - <a href="/train/{{ t.id }}">Details</a> - <a href="/book/{{ t.id }}">Book</a></li>
+    {% endfor %}
+    </ul>
+    <p><a href="/">Back</a></p>
+  </body>
+</html>

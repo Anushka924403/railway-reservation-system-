@@ -1,59 +1,90 @@
-Anushka Tiwari, [02-12-2025 18:36]
-body { font-family: Arial, sans-serif; max-width: 980px; margin: 0 auto; padding: 12px; }
-header nav { margin-bottom: 18px; }
-form input, form select { padding:6px; margin:6px 0; }
+:root{
+  --primary:#667eea;
+  --accent:#764ba2;
+  --muted:#6b7280;
+  --bg:#f5f7fb;
+  --card:#ffffff;
+}
+*{box-sizing:border-box}
+body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:#0f172a; margin:0}
+.container{max-width:1200px;margin:28px auto;padding:20px}
+.navbar{background:linear-gradient(90deg,var(--primary),var(--accent));color:white;padding:14px 20px;border-radius:10px;display:flex;align-items:center;justify-content:space-between}
+.navbar .brand{font-weight:800;letter-spacing:0.2px}
+.navbar a{color:rgba(255,255,255,0.95);text-decoration:none;margin-left:12px}
+.card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,0.06)}
+.grid{display:grid;gap:16px}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn.primary{background:var(--primary);color:white}
+.btn.ghost{background:transparent;border:2px solid rgba(102,126,234,0.12);color:var(--primary)}
+.muted{color:var(--muted)}
+h1,h2,h3{margin:0 0 10px 0}
+.search-row{display:flex;gap:12px}
+.search-row input,.search-row select{flex:1;padding:10px;border-radius:10px;border:1px solid #e6e9ef}
+.train-card{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:10px;border:1px solid #eef2ff;background:linear-gradient(180deg, rgba(255,255,255,0.85), #fff)}
+.train-meta{display:flex;gap:16px;align-items:center}
+.small{font-size:0.9em}
+.badge{background:rgba(102,126,234,0.12);color:var(--primary);padding:6px 10px;border-radius:999px;font-weight:700}
+.panel{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid #f0f4ff}
+.helper{font-size:0.95em;color:var(--muted)}
+footer{max-width:1200px;margin:20px auto;padding:18px;text-align:center;color:var(--muted)}
 
-Anushka Tiwari, [02-12-2025 18:38]
-.form-container {
-    width: 420px;
-    margin: 40px auto;
-    padding: 25px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+/* responsive tweaks */
+@media(max-width:900px){.grid.cols-3{grid-template-columns:1fr}.search-row{flex-direction:column}}
+
+/* Animations & Transitions */
+.side-menu{
+  position:fixed;
+  top:64px;
+  left:16px;
+  width:220px;
+  background:var(--card);
+  padding:16px;
+  border-radius:8px;
+  box-shadow:0 12px 40px rgba(15,23,42,0.12);
+  transform:translateX(-120%);
+  opacity:0;
+  transition:transform 320ms cubic-bezier(.2,.9,.2,1), opacity 320ms ease;
+  z-index:1200;
+}
+.side-menu.open{transform:translateX(0);opacity:1}
+.side-menu a{display:block;color:var(--primary);text-decoration:none;padding:8px 6px;border-radius:6px;margin-bottom:6px}
+.side-menu a:hover{background:linear-gradient(90deg, rgba(102,126,234,0.08), rgba(118,75,162,0.06))}
+
+/* Page overlay that dims background when side menu is open */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0);
+  pointer-events:none;
+  transition:background 280ms ease, opacity 280ms ease;
+  opacity:0;
+  z-index:1150; /* below side-menu (1200) */
+}
+.overlay.show{
+  background:rgba(0,0,0,0.45);
+  pointer-events:auto;
+  opacity:1;
 }
 
-.form-title {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
+/* prevent body scroll when menu open */
+body.no-scroll{overflow:hidden}
 
-.form-group {
-    margin-bottom: 15px;
-}
+.ai-icon{width:72px;height:72px;border-radius:36px;background:linear-gradient(135deg,#fff,#f3f6ff);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.08);cursor:pointer;font-size:30px;transition:transform 220ms ease, box-shadow 220ms ease}
+.ai-icon:hover{transform:scale(1.06);box-shadow:0 18px 40px rgba(0,0,0,0.12)}
+.ai-icon.pulse{animation:aiPulse 2.4s infinite}
+@keyframes aiPulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
 
-.form-control {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #cccccc;
-}
+/* Hamburger icon (three bars) animation to X */
+.hamburger{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;width:44px;height:44px}
+.hamburger .bar{background:white;width:22px;height:2px;border-radius:2px;display:block;transition:transform 220ms ease, opacity 220ms ease}
+.hamburger .bar2{width:18px}
+.hamburger .bar3{width:14px}
+.hamburger.open .bar1{transform:translateY(6px) rotate(45deg)}
+.hamburger.open .bar2{opacity:0;transform:scaleX(0)}
+.hamburger.open .bar3{transform:translateY(-6px) rotate(-45deg)}
 
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    background: #007bff;
-    color: white;
-    border: none;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.btn-submit:hover {
-    background: #0056b3;
-}
-
-.switch-link {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.alert {
-    padding: 10px;
-    background: #ffdddd;
-    border-left: 4px solid #ff0000;
-    border-radius: 6px;
-    margin-bottom: 15px;
-}
+/* Smooth buttons and cards */
+.btn{transition:transform 180ms ease, box-shadow 180ms ease}
+.card{transition:transform 220ms ease, box-shadow 220ms ease}
+.card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(15,23,42,0.08)}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ticket {{ booking.pnr }}</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body style="padding:24px">
+    <div class="container">
+      <div class="card" style="max-width:700px;margin:0 auto">
+        <h2>Ticket - {{ booking.pnr }}</h2>
+        <div class="helper" style="margin-bottom:12px">Booking Reference: <strong>{{ booking.pnr }}</strong></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div class="small"><strong>Passenger ID</strong></div>
+            <div class="muted">{{ booking.user_id }}</div>
+            <div class="small" style="margin-top:8px"><strong>Train</strong></div>
+            <div class="muted">{{ train.name }} ({{ train.train_no }})</div>
+          </div>
+          <div>
+            <div class="small"><strong>Route</strong></div>
+            <div class="muted">{{ train.source }} → {{ train.destination }}</div>
+            <div class="small" style="margin-top:8px"><strong>Date / Class</strong></div>
+            <div class="muted">{{ booking.travel_date }} / {{ booking.cls }} ({{ booking.seat_count }} seats)</div>
+          </div>
+        </div>
+        <div style="margin-top:14px; font-weight:700">Total: ₹{{ booking.total_fare }}</div>
+        <div style="margin-top:18px"><a href="/home" class="btn primary">Back to Home</a></div>
+      </div>
+    </div>
+  </body>
+</html>
